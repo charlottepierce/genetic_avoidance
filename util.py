@@ -1,7 +1,7 @@
 from map import Map
 
 def create_map(file_name):
-	''' Create a Map object using the map stored in the given file.
+	''' Create a Map object using the map stored in a given file.
 
 	args
 	----
@@ -21,7 +21,9 @@ def create_map(file_name):
 			elif '#' in line:
 				line = line[0:line.index('#')]
 
-			map_data.append(tuple(line.strip()))
+			row = list(line.strip())
+			row.reverse()
+			map_data.append(tuple(row))
 
 	return Map(tuple(map_data))
 

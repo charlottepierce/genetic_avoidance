@@ -16,6 +16,14 @@ class Map(object):
 
 		self.tiles = self._create_tiles(map_data)
 
+	def width():
+		''' Return the width of the map in tiles. '''
+		return len(self.tiles[0])
+
+	def height():
+		''' Return the height of the map in tiles. '''
+		return len(self.tiles)
+
 	def _create_tiles(self, map_data):
 		''' Create a linked series of MapTile objects,
 		representing the same layout as given.
@@ -36,8 +44,10 @@ class Map(object):
 			row = []
 			for i in range(len(row_data)):
 				tile_char = row_data[i]
-				if tile_char in (Map.TRAVERSABLE_TILE, Map.AGENT_START, Map.GOAL):
+				if tile_char in (Map.TRAVERSABLE_TILE, Map.AGENT_START):
 					tile = MapTile(tile_char)
+				elif tile_char is Map.GOAL:
+					tile = MapTile(tile_char, is_goal=True)
 				elif tile_char is Map.NON_TRAVERSABLE_TILE:
 					tile = MapTile(tile_char, traversable=False)
 
@@ -76,9 +86,10 @@ class Map(object):
 # ------------------------------------------------------------------------------- #
 
 class MapTile(object):
-	def __init__(self, tile_char, traversable=True):
+	def __init__(self, tile_char, traversable=True, is_goal=False):
 		self.char = tile_char
 		self.traversable = traversable
+		self.is_goal = is_goal
 		# neighbouring tiles
 		self.north = None
 		self.south = None
