@@ -1,4 +1,4 @@
-class Map(object):
+class Map():
 	# tile representations in map files
 	TRAVERSABLE_TILE = '.'
 	NON_TRAVERSABLE_TILE = 'x'
@@ -14,7 +14,7 @@ class Map(object):
 
 		'''
 
-		self.tiles = self._create_tiles(map_data)
+		self.tiles, self.agent_start = self._create_tiles(map_data)
 
 	def width():
 		''' Return the width of the map in tiles. '''
@@ -35,8 +35,11 @@ class Map(object):
 		return
 		------
 			A series of linked MapTile objects.
+			Starting tile for the agent.
 
 		'''
+
+		start_tile = None # agent's initial tile
 
 		# create tiles
 		tiles = []
@@ -44,8 +47,11 @@ class Map(object):
 			row = []
 			for i in range(len(row_data)):
 				tile_char = row_data[i]
-				if tile_char in (Map.TRAVERSABLE_TILE, Map.AGENT_START):
+				if tile_char is Map.TRAVERSABLE_TILE:
 					tile = MapTile(tile_char)
+				elif tile_char is Map.AGENT_START:
+					tile = MapTile(tile_char, has_agent=True)
+					start_tile = tile
 				elif tile_char is Map.GOAL:
 					tile = MapTile(tile_char, is_goal=True)
 				elif tile_char is Map.NON_TRAVERSABLE_TILE:
@@ -81,18 +87,33 @@ class Map(object):
 					south.north = tile
 					tile.south = south
 
-		return tuple(tiles)
+		return tuple(tiles), start_tile
 
 # ------------------------------------------------------------------------------- #
 
 class MapTile(object):
-	def __init__(self, tile_char, traversable=True, is_goal=False):
+	def __init__(self, tile_char, traversable=True, is_goal=False, has_agent=False):
+		''' Create a MapTile object.
+
+		args
+		----
+			tile_char: The character representing this tile in the original map file.
+			traversable: True if the tile can be occupied.
+			is_goal: True if the tile is the goal location.
+			has_agent: True if the agent is on the tile.
+
+		'''
+
 		self.char = tile_char
 		self.traversable = traversable
 		self.is_goal = is_goal
+		self.has_agent = has_agent
 		# neighbouring tiles
 		self.north = None
 		self.south = None
 		self.left = None
 		self.right = None
+
+	def __str__(self):
+		return self.char
 

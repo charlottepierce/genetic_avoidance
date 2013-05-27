@@ -22,7 +22,6 @@ def create_map(file_name):
 				line = line[0:line.index('#')]
 
 			row = list(line.strip())
-			row.reverse()
 			map_data.append(tuple(row))
 
 	return Map(tuple(map_data))
