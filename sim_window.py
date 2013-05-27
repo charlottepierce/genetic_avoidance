@@ -27,19 +27,41 @@ class SimWindow(pyglet.window.Window):
 
 			pyglet.window.Window.__init__(self, width=width, height=height)
 
+		pyglet.clock.schedule(self.update)
+
 		self.environment = environment
 		self.agent = agent
 		self.guard = guard
+		self.finished = False
 
-	def run_silent(self):
-		''' Run the simulation without graphics. '''
+	def check_win(self):
+		''' Check if the agent has reached the goal. '''
 
-		print 'running'
+		if self.agent.tile.is_goal:
+			return True
+		return False
+
+	def check_detection(self):
+		''' Check if the agent has been detected. '''
+
+		if self.agent.tile.detection:
+			return True
+		return False
+
+	def update(self, dt):
+		''' Update the simulation. '''
+
+		if self.check_win():
+			self.on_draw() # need to force a last draw because of execution order
+			self.finished = True
+		elif self.check_detection():
+			self.on_draw() # need to force a last draw because of execution order
+			self.finished = True
 
 	def on_draw(self):
 		''' Create an image for each tile and draw it. '''
 
-		if not self.graphics_on:
+		if (not self.graphics_on) or self.finished:
 			return
 
 		self.clear()
@@ -93,11 +115,12 @@ class SimWindow(pyglet.window.Window):
 
 		'''
 
-		if not self.graphics_on:
-			return
-
 		if symbol == key.ESCAPE:
 			pyglet.app.exit()
+
+		if (not self.graphics_on) or self.finished:
+			return
+
 		if symbol == key.UP:
 			self.agent.move_up()
 		elif symbol == key.DOWN:

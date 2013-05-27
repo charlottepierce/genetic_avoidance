@@ -14,8 +14,5 @@ if __name__ == '__main__':
 
 	sim = SimWindow(agent, guard, environment)
 # 	sim = SimWindow(agent, guard, environment, graphics_on=False)
-	if sim.graphics_on:
-		pyglet.app.run()
-	else:
-		sim.run_silent()
+	pyglet.app.run()
 
