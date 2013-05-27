@@ -1,3 +1,5 @@
+import types
+
 class Agent():
 	def __init__(self, start_tile):
 		''' Create a new agent object.
@@ -9,6 +11,15 @@ class Agent():
 		'''
 
 		self.tile = start_tile
+		exec(
+		"""def my_update(self):
+			print 'update'
+			self.move_up()
+		""")
+		self.update = types.MethodType(my_update, self) # replace update method with my_update for this instance only
+
+	def update(self):
+		pass
 
 	def move_up(self):
 		''' Tell agent to move up one tile. '''

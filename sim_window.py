@@ -51,6 +51,11 @@ class SimWindow(pyglet.window.Window):
 	def update(self, dt):
 		''' Update the simulation. '''
 
+		if self.finished:
+			return
+
+		self.agent.update()
+
 		if self.check_win():
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
