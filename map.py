@@ -4,6 +4,7 @@ class Map():
 	NON_TRAVERSABLE_TILE = 'x'
 	AGENT_START = 'o'
 	GOAL = 'G'
+	GUARD = '1'
 
 	def __init__(self, map_data):
 		''' Create a new Map object.
@@ -14,7 +15,7 @@ class Map():
 
 		'''
 
-		self.tiles, self.agent_start = self._create_tiles(map_data)
+		self.tiles, self.agent_start, self.guard_start = self._create_tiles(map_data)
 
 	def width():
 		''' Return the width of the map in tiles. '''
@@ -39,7 +40,8 @@ class Map():
 
 		'''
 
-		start_tile = None # agent's initial tile
+		agent_start = None # agent's initial tile
+		guard_start = None # guard's starting tile
 
 		# create tiles
 		tiles = []
@@ -51,7 +53,10 @@ class Map():
 					tile = MapTile(tile_char)
 				elif tile_char is Map.AGENT_START:
 					tile = MapTile(tile_char, has_agent=True)
-					start_tile = tile
+					agent_start = tile
+				elif tile_char is Map.GUARD:
+					tile = MapTile(tile_char, has_guard=True, detection=True)
+					guard_start = tile
 				elif tile_char is Map.GOAL:
 					tile = MapTile(tile_char, is_goal=True)
 				elif tile_char is Map.NON_TRAVERSABLE_TILE:
@@ -87,12 +92,12 @@ class Map():
 					south.north = tile
 					tile.south = south
 
-		return tuple(tiles), start_tile
+		return tuple(tiles), agent_start, guard_start
 
 # ------------------------------------------------------------------------------- #
 
 class MapTile(object):
-	def __init__(self, tile_char, traversable=True, is_goal=False, has_agent=False):
+	def __init__(self, tile_char, traversable=True, is_goal=False, has_agent=False, has_guard=False, detection=False):
 		''' Create a MapTile object.
 
 		args
@@ -101,6 +106,8 @@ class MapTile(object):
 			traversable: True if the tile can be occupied.
 			is_goal: True if the tile is the goal location.
 			has_agent: True if the agent is on the tile.
+			has_guard: True if a guard is on the tile.
+			detection: True if agent will be detected on this tile.
 
 		'''
 
@@ -108,6 +115,8 @@ class MapTile(object):
 		self.traversable = traversable
 		self.is_goal = is_goal
 		self.has_agent = has_agent
+		self.has_guard = has_guard
+		self.detection = detection
 		# neighbouring tiles
 		self.north = None
 		self.south = None

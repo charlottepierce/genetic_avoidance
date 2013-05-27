@@ -2,7 +2,7 @@ import pyglet
 
 import util
 from sim_window import SimWindow
-from agent import Agent
+from agent import Agent, Guard
 
 if __name__ == '__main__':
 	map_file = 'maps/1.txt'
@@ -10,7 +10,12 @@ if __name__ == '__main__':
 	environment = util.create_map(map_file)
 
 	agent = Agent(environment.agent_start)
+	guard = Guard(environment.guard_start)
 
-	sim = SimWindow(agent, environment)
-	pyglet.app.run()
+	sim = SimWindow(agent, guard, environment)
+# 	sim = SimWindow(agent, guard, environment, graphics_on=False)
+	if sim.graphics_on:
+		pyglet.app.run()
+	else:
+		sim.run_silent()
 

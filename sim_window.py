@@ -7,8 +7,10 @@ class SimWindow(pyglet.window.Window):
 	TRAVERSABLE_COL = (255, 255, 255, 255)
 	GOAL_COL = (17, 179, 82, 255)
 	AGENT_COL = (255, 255, 0, 255)
+	GUARD_COL = (100, 100, 100, 255)
+	DETECTION_ZONE_COL = (255, 0, 0, 200)
 
-	def __init__(self, agent, environment):
+	def __init__(self, agent, guard, environment, graphics_on=True):
 		''' Create a simulation window.
 
 		args
@@ -18,15 +20,27 @@ class SimWindow(pyglet.window.Window):
 
 		'''
 
-		width = len(environment.tiles[0]) * SimWindow.TILE_SIDE_LEN
-		height = len(environment.tiles) * SimWindow.TILE_SIDE_LEN
+		self.graphics_on = graphics_on
+		if self.graphics_on:
+			width = len(environment.tiles[0]) * SimWindow.TILE_SIDE_LEN
+			height = len(environment.tiles) * SimWindow.TILE_SIDE_LEN
 
-		pyglet.window.Window.__init__(self, width=width, height=height)
+			pyglet.window.Window.__init__(self, width=width, height=height)
+
 		self.environment = environment
 		self.agent = agent
+		self.guard = guard
+
+	def run_silent(self):
+		''' Run the simulation without graphics. '''
+
+		print 'running'
 
 	def on_draw(self):
 		''' Create an image for each tile and draw it. '''
+
+		if not self.graphics_on:
+			return
 
 		self.clear()
 
@@ -39,6 +53,10 @@ class SimWindow(pyglet.window.Window):
 				pattern = pyglet.image.SolidColorImagePattern(SimWindow.TRAVERSABLE_COL)
 				if not tile.traversable:
 					pattern = pyglet.image.SolidColorImagePattern(SimWindow.NON_TRAVERSABLE_COL)
+				if tile.detection:
+					pattern = pyglet.image.SolidColorImagePattern(SimWindow.DETECTION_ZONE_COL)
+				if tile.has_guard:
+					pattern = pyglet.image.SolidColorImagePattern(SimWindow.GUARD_COL)
 				if tile.is_goal:
 					pattern = pyglet.image.SolidColorImagePattern(SimWindow.GOAL_COL)
 				if tile.has_agent:
@@ -75,9 +93,11 @@ class SimWindow(pyglet.window.Window):
 
 		'''
 
+		if not self.graphics_on:
+			return
+
 		if symbol == key.ESCAPE:
 			pyglet.app.exit()
-
 		if symbol == key.UP:
 			self.agent.move_up()
 		elif symbol == key.DOWN:

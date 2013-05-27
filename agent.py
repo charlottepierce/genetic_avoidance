@@ -42,3 +42,30 @@ class Agent():
 			self.tile = self.tile.right
 			self.tile.has_agent = True
 
+# ------------------------------------------------------------------------------- #
+
+class Guard(Agent):
+	def __init__(self, start_tile):
+		''' Create a new guard object. '''
+
+		Agent.__init__(self, start_tile)
+		# mark surrounding tiles as detection zones
+		north = self.tile.north
+		if north:
+			north.detection = True
+			if north.left:
+				north.left.detection = True
+			if north.right:
+				north.right.detection = True
+		south = self.tile.south
+		if south:
+			south.detection = True
+			if south.left:
+				south.left.detection = True
+			if south.right:
+				south.right.detection = True
+		if self.tile.left:
+			self.tile.left.detection = True
+		if self.tile.right:
+			self.tile.right.detection = True
+
