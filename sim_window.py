@@ -59,14 +59,16 @@ class SimWindow(pyglet.window.Window):
 		if self.check_win():
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
+			print 'Reached goal!'
 		elif self.check_detection():
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
+			print 'Got caught...'
 
 	def on_draw(self):
 		''' Create an image for each tile and draw it. '''
 
-		if (not self.graphics_on) or self.finished:
+		if (not self.graphics_on):
 			return
 
 		self.clear()
@@ -123,9 +125,9 @@ class SimWindow(pyglet.window.Window):
 		if symbol == key.ESCAPE:
 			pyglet.app.exit()
 
-		if (not self.graphics_on) or self.finished:
-			return
-
+# 		if self.finished:
+# 			return
+#
 		if symbol == key.UP:
 			self.agent.move_up()
 		elif symbol == key.DOWN:
