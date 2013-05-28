@@ -5,7 +5,8 @@ ACTION_MAPPINGS = {
 	'up': 'self.move_up()',
 	'down': 'self.move_down()',
 	'left': 'self.move_left()',
-	'right': 'self.move_right()'
+	'right': 'self.move_right()',
+	'wait': 'pass'
 }
 
 ACTION_DELIMETER = ';'
@@ -27,8 +28,6 @@ def create_action_list(file_name):
 	with open(file_name) as f:
 		for line in f:
 			action_str += line.strip()
-
-	print '\'' + action_str + '\''
 
 	return filter(None, action_str.split(ACTION_DELIMETER))
 
