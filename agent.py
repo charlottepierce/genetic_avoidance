@@ -1,7 +1,8 @@
 import types
+import util
 
 class Agent():
-	def __init__(self, start_tile):
+	def __init__(self, start_tile, actions_file):
 		''' Create a new agent object.
 
 		args
@@ -11,14 +12,23 @@ class Agent():
 		'''
 
 		self.tile = start_tile
-		exec(
-		"""def my_update(self):
-			print 'update'
-			self.move_up()
-		""")
-		self.update = types.MethodType(my_update, self) # replace update method with my_update for this instance only
+
+		if actions_file:
+			self.actions = util.create_action_list(actions_file)
+			self.action_index = 0
 
 	def update(self):
+		# create and execute move method for next action
+		method_decl = util.create_move(self.actions, self.action_index)
+		exec(method_decl)
+		self.my_move = types.MethodType(my_move, self)
+		self.my_move()
+		# get ready for next move
+		self.action_index += 1
+		if self.action_index >= len(self.actions):
+			self.action_index = 0
+
+	def my_move(self):
 		pass
 
 	def move_up(self):
@@ -59,7 +69,7 @@ class Guard(Agent):
 	def __init__(self, start_tile):
 		''' Create a new guard object. '''
 
-		Agent.__init__(self, start_tile)
+		Agent.__init__(self, start_tile, None)
 		# mark surrounding tiles as detection zones
 		north = self.tile.north
 		if north:
@@ -79,4 +89,3 @@ class Guard(Agent):
 			self.tile.left.detection = True
 		if self.tile.right:
 			self.tile.right.detection = True
-
