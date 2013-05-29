@@ -19,7 +19,7 @@ class Agent():
 
 	def update(self):
 		# create and execute move method for next action
-		method_decl = util.create_move(self.actions, self.action_index)
+		method_decl = util.create_move(self.actions[self.action_index])
 		exec(method_decl)
 		self.my_move = types.MethodType(my_move, self)
 		self.my_move()

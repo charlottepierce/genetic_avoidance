@@ -1,3 +1,6 @@
 up;
 up;right;
 wait;
+
+if True down, up;
+

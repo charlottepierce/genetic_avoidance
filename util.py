@@ -31,7 +31,7 @@ def create_action_list(file_name):
 
 	return filter(None, action_str.split(ACTION_DELIMETER))
 
-def create_move(actions, action_index):
+def create_move(action):
 	''' Create the text of a `my_move` method for an agent based on a set of actions.
 
 	This can be added as a member function for the agent using:
@@ -42,20 +42,28 @@ def create_move(actions, action_index):
 
 	args
 	----
-		actions: List of agent actions.
-		indentation: Number of tabs code should be indented by; defaults to 0.
+		action: The action to create a move method for.
 
 	return
 	------
-		Python code equivalent of the actions given.
+		Python code equivalent of the action given.
 
 	'''
 
-	method_decl = 'def my_move(self):\n'
+	method_decl = 'def my_move(self):\n\t'
 
-	method_decl += '\n'
-	method_decl += '\t'
-	method_decl += ACTION_MAPPINGS[actions[action_index]]
+	if action in ACTION_MAPPINGS.keys():
+		method_decl += ACTION_MAPPINGS[action]
+	elif action.startswith('if'):
+		true_branch, false_action = [x.strip() for x in action.split(',')]
+		if_start, condition, true_action = [x.strip() for x in true_branch.split()]
+
+		method_decl += 'if ' + condition + ':\n'
+		method_decl += '\t\t' + ACTION_MAPPINGS[true_action] + '\n'
+		method_decl += '\telse:\n'
+		method_decl += '\t\t' + ACTION_MAPPINGS[false_action]
+	else:
+		method_decl += ACTION_MAPPINGS['wait']
 
 	return method_decl
 
