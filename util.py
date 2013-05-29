@@ -9,6 +9,14 @@ ACTION_MAPPINGS = {
 	'wait': 'pass'
 }
 
+# query -> python code mappings
+QUERY_MAPPINGS = {
+	'up_blocked': 'self.obstacle_up()',
+	'down_blocked': 'self.obstacle_down()',
+	'left_blocked': 'self.obstacle_left()',
+	'right_blocked': 'self.obstacle_right()'
+}
+
 ACTION_DELIMETER = ';'
 
 def create_action_list(file_name):
@@ -58,12 +66,14 @@ def create_move(action):
 		true_branch, false_action = [x.strip() for x in action.split(',')]
 		if_start, condition, true_action = [x.strip() for x in true_branch.split()]
 
-		method_decl += 'if ' + condition + ':\n'
+		method_decl += 'if ' + QUERY_MAPPINGS[condition] + ':\n'
 		method_decl += '\t\t' + ACTION_MAPPINGS[true_action] + '\n'
 		method_decl += '\telse:\n'
 		method_decl += '\t\t' + ACTION_MAPPINGS[false_action]
 	else:
 		method_decl += ACTION_MAPPINGS['wait']
+
+# 	print method_decl
 
 	return method_decl
 

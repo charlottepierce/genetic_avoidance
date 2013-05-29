@@ -2,6 +2,8 @@ import types
 import util
 
 class Agent():
+	VIEW_RANGE = 3
+
 	def __init__(self, start_tile, actions_file):
 		''' Create a new agent object.
 
@@ -62,6 +64,48 @@ class Agent():
 			self.tile.has_agent = False
 			self.tile = self.tile.right
 			self.tile.has_agent = True
+
+	def obstacle_up(self):
+		''' Check if an obstacle is located immediately up. '''
+
+		if not self.tile.north:
+			return True
+
+		return not self.tile.north.traversable
+
+	def obstacle_down(self):
+		''' Check if an obstacle is located immediately down. '''
+
+		if not self.tile.south:
+			return True
+
+		return not self.tile.south.traversable
+
+	def obstacle_left(self):
+		''' Check if an obstacle is located immediately to the left. '''
+
+		if not self.tile.left:
+			return True
+
+		return not self.tile.left.traversable
+
+	def obstacle_right(self):
+		''' Check if an obstacle is located immediately to the right. '''
+
+		if not self.tile.right:
+			return True
+
+		return not self.tile.right.traversable
+
+# 	* within 3 blocks (manhattan distance)
+# 		* can see guard left?
+# 		* can see guard right?
+# 		* can see guard up?
+# 		* can see guard down?
+# 		* is goal somewhere to the left?
+# 		* is goal somewhere to the right?
+# 		* is goal somewhere to the up?
+# 		* is goal somewhere to the down?
 
 # ------------------------------------------------------------------------------- #
 
