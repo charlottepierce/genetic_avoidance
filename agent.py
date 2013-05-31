@@ -149,11 +149,25 @@ class Agent():
 
 		return False
 
-# 	* within 3 blocks (manhattan distance)
-# 		* is goal somewhere to the left?
-# 		* is goal somewhere to the right?
-# 		* is goal somewhere to the up?
-# 		* is goal somewhere to the down?
+	def goal_left(self):
+		''' Check if the goal is somewhere to the left of the agent. '''
+
+		return self.tile.position.x > self.game_map.goal.position.x
+
+	def goal_right(self):
+		''' Check if the goal is somewhere to the right of the agent. '''
+
+		return self.tile.position.x < self.game_map.goal.position.x
+
+	def goal_north(self):
+		''' Check if the goal is somewhere to the north of the agent. '''
+
+		return self.tile.position.y < self.game_map.goal.position.y
+
+	def goal_south(self):
+		''' Check if the goal is somewhere to the south of the agent. '''
+
+		return self.tile.position.y > self.game_map.goal.position.y
 
 # ------------------------------------------------------------------------------- #
 

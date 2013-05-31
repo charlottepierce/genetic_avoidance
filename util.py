@@ -18,7 +18,11 @@ QUERY_MAPPINGS = {
 	'guard_left': 'self.see_guard_left()',
 	'guard_right': 'self.see_guard_right()',
 	'guard_north': 'self.see_guard_north()',
-	'guard_south': 'self.see_guard_south()'
+	'guard_south': 'self.see_guard_south()',
+	'goal_left': 'self.goal_left()',
+	'goal_right': 'self.goal_right()',
+	'goal_north': 'self.goal_north()',
+	'goal_south': 'self.goal_south()'
 }
 
 def create_action_list(file_name):

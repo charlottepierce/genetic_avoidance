@@ -1,3 +1,4 @@
-down;
-if guard_right down, right;
-
+if goal_right right, up;
+if goal_north up, right;
+if right_blocked up, right;
+if goal_south down, right;
