@@ -17,7 +17,12 @@ class Map():
 
 		'''
 
-		self.tiles, self.agent_start, self.guard_start = self._create_tiles(map_data)
+		self.tiles = None
+		self.agent_start = None
+		self.guard_start = None
+		self.goal = None
+
+		self._create_tiles(map_data)
 
 	def width():
 		''' Return the width of the map in tiles. '''
@@ -31,6 +36,8 @@ class Map():
 		''' Create a linked series of MapTile objects,
 		representing the same layout as given.
 
+		Sets the map's instance variables `tiles`, `agent_start`, `guard_start` and `goal`.
+
 		args
 		----
 			map_data: A tuple of tuples, where each inner tuple is a row of the map.
@@ -42,9 +49,6 @@ class Map():
 
 		'''
 
-		agent_start = None # agent's initial tile
-		guard_start = None # guard's starting tile
-
 		# create tiles
 		tiles = []
 		for row_data in map_data:
@@ -55,12 +59,13 @@ class Map():
 					tile = MapTile(tile_char)
 				elif tile_char is Map.AGENT_START:
 					tile = MapTile(tile_char, has_agent=True)
-					agent_start = tile
+					self.agent_start = tile
 				elif tile_char is Map.GUARD:
 					tile = MapTile(tile_char, has_guard=True, detection=True)
-					guard_start = tile
+					self.guard_start = tile
 				elif tile_char is Map.GOAL:
 					tile = MapTile(tile_char, is_goal=True)
+					self.goal = tile
 				elif tile_char is Map.NON_TRAVERSABLE_TILE:
 					tile = MapTile(tile_char, traversable=False)
 
@@ -99,7 +104,7 @@ class Map():
 					south.north = tile
 					tile.south = south
 
-		return tuple(tiles), agent_start, guard_start
+		self.tiles = tuple(tiles)
 
 # ------------------------------------------------------------------------------- #
 

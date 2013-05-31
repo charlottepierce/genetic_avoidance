@@ -4,15 +4,18 @@ import util
 class Agent():
 	VIEW_RANGE = 3
 
-	def __init__(self, start_tile, actions_file):
+	def __init__(self, game_map, start_tile, actions_file):
 		''' Create a new agent object.
 
 		args
 		----
-			start_tile: The initial tile of the agent.
+			game_map: A tile map representing the game environment.
+			start_tile: The starting tile for the agent.
+			actions_file: The file containing the sequence of actions the agent should follow.
 
 		'''
 
+		self.game_map = game_map
 		self.tile = start_tile
 		self.actions = None
 
@@ -102,6 +105,9 @@ class Agent():
 
 		return not self.tile.right.traversable
 
+	def see_guard_left(self):
+		''' Check if the agent can see the guard to the left within its view range. '''
+
 # 	* within 3 blocks (manhattan distance)
 # 		* can see guard left?
 # 		* can see guard right?
@@ -115,10 +121,10 @@ class Agent():
 # ------------------------------------------------------------------------------- #
 
 class Guard(Agent):
-	def __init__(self, start_tile):
+	def __init__(self, game_map, start_tile):
 		''' Create a new guard object. '''
 
-		Agent.__init__(self, start_tile, None)
+		Agent.__init__(self, game_map, start_tile, None)
 		# mark surrounding tiles as detection zones
 		north = self.tile.north
 		if north:
