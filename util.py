@@ -17,8 +17,6 @@ QUERY_MAPPINGS = {
 	'right_blocked': 'self.obstacle_right()'
 }
 
-ACTION_DELIMETER = ';'
-
 def create_action_list(file_name):
 	''' Create a list of agent actions from the text contained in a file.
 
@@ -37,7 +35,7 @@ def create_action_list(file_name):
 		for line in f:
 			action_str += line.strip()
 
-	return filter(None, action_str.split(ACTION_DELIMETER))
+	return filter(None, action_str.split(';'))
 
 def create_move(action):
 	''' Create the text of a `my_move` method for an agent based on a set of actions.

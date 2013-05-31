@@ -127,7 +127,7 @@ class SimWindow(pyglet.window.Window):
 
 # 		if self.finished:
 # 			return
-#
+
 		if symbol == key.UP:
 			self.agent.move_up()
 		elif symbol == key.DOWN:

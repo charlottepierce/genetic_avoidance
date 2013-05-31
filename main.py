@@ -10,7 +10,8 @@ if __name__ == '__main__':
 
 	environment = util.create_map(map_file)
 
-	agent = Agent(environment.agent_start, actions_file)
+# 	agent = Agent(environment.agent_start, actions_file)
+	agent = Agent(environment.agent_start, None)
 	guard = Guard(environment.guard_start)
 
 	sim = SimWindow(agent, guard, environment)

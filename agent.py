@@ -14,6 +14,7 @@ class Agent():
 		'''
 
 		self.tile = start_tile
+		self.actions = None
 
 		if actions_file:
 			self.actions = util.create_action_list(actions_file)
@@ -21,6 +22,10 @@ class Agent():
 
 	def update(self):
 		# create and execute move method for next action
+
+		if not self.actions:
+			return
+
 		method_decl = util.create_move(self.actions[self.action_index])
 		exec(method_decl)
 		self.my_move = types.MethodType(my_move, self)

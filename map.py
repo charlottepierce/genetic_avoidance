@@ -66,11 +66,16 @@ class Map():
 
 			tiles.append(tuple(row))
 
-		# link tiles
-		for row_num in range(0, len(tiles)):
+		# link tiles and set their grid positions
+		for row_num in range(len(tiles)):
 			row = tiles[row_num]
+			grid_y = len(tiles) - (tiles.index(row) + 1)
 			for tile_num in range(len(row)):
 				tile = row[tile_num]
+
+				grid_x = row.index(tile)
+				tile.position = GridPosition(grid_x, grid_y)
+
 				# link left tile
 				if not (tile_num == 0):
 					left = row[tile_num - 1]
@@ -96,8 +101,8 @@ class Map():
 
 # ------------------------------------------------------------------------------- #
 
-class MapTile(object):
-	def __init__(self, tile_char, traversable=True, is_goal=False, has_agent=False, has_guard=False, detection=False):
+class MapTile():
+	def __init__(self, tile_char, grid_position=None, traversable=True, is_goal=False, has_agent=False, has_guard=False, detection=False):
 		''' Create a MapTile object.
 
 		args
@@ -112,6 +117,7 @@ class MapTile(object):
 		'''
 
 		self.char = tile_char
+		self.position = grid_position
 		self.traversable = traversable
 		self.is_goal = is_goal
 		self.has_agent = has_agent
@@ -125,4 +131,13 @@ class MapTile(object):
 
 	def __str__(self):
 		return self.char
+
+# ------------------------------------------------------------------------------- #
+
+class GridPosition():
+	def __init__(self, x, y):
+		''' Create a GridPosition object. '''
+
+		self.x = x
+		self.y = y
 
