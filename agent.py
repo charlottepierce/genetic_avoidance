@@ -150,10 +150,6 @@ class Agent():
 		return False
 
 # 	* within 3 blocks (manhattan distance)
-# 		* can see guard left?
-# 		* can see guard right?
-# 		* can see guard up?
-# 		* can see guard down?
 # 		* is goal somewhere to the left?
 # 		* is goal somewhere to the right?
 # 		* is goal somewhere to the up?

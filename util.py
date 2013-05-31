@@ -14,7 +14,11 @@ QUERY_MAPPINGS = {
 	'up_blocked': 'self.obstacle_up()',
 	'down_blocked': 'self.obstacle_down()',
 	'left_blocked': 'self.obstacle_left()',
-	'right_blocked': 'self.obstacle_right()'
+	'right_blocked': 'self.obstacle_right()',
+	'guard_left': 'self.see_guard_left()',
+	'guard_right': 'self.see_guard_right()',
+	'guard_north': 'self.see_guard_north()',
+	'guard_south': 'self.see_guard_south()'
 }
 
 def create_action_list(file_name):

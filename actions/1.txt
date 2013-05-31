@@ -1,3 +1,3 @@
-if up_blocked down, up;
-if left_blocked right, left;
+down;
+if guard_right down, right;
 
