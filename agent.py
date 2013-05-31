@@ -108,6 +108,47 @@ class Agent():
 	def see_guard_left(self):
 		''' Check if the agent can see the guard to the left within its view range. '''
 
+		tiles = self.game_map.tiles_within(self.tile, 'left', Agent.VIEW_RANGE)
+
+		for tile in tiles:
+			if tile.has_guard:
+				return True
+
+		return False
+
+	def see_guard_right(self):
+		''' Check if the agent can see the guard to the right within its view range. '''
+
+		tiles = self.game_map.tiles_within(self.tile, 'right', Agent.VIEW_RANGE)
+
+		for tile in tiles:
+			if tile.has_guard:
+				return True
+
+		return False
+
+	def see_guard_north(self):
+		''' Check if the agent can see the guard to the north within its view range. '''
+
+		tiles = self.game_map.tiles_within(self.tile, 'north', Agent.VIEW_RANGE)
+
+		for tile in tiles:
+			if tile.has_guard:
+				return True
+
+		return False
+
+	def see_guard_south(self):
+		''' Check if the agent can see the guard to the south within its view range. '''
+
+		tiles = self.game_map.tiles_within(self.tile, 'south', Agent.VIEW_RANGE)
+
+		for tile in tiles:
+			if tile.has_guard:
+				return True
+
+		return False
+
 # 	* within 3 blocks (manhattan distance)
 # 		* can see guard left?
 # 		* can see guard right?
