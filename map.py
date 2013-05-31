@@ -24,13 +24,52 @@ class Map():
 
 		self._create_tiles(map_data)
 
-	def width():
+	def width(self):
 		''' Return the width of the map in tiles. '''
+
 		return len(self.tiles[0])
 
-	def height():
+	def height(self):
 		''' Return the height of the map in tiles. '''
+
 		return len(self.tiles)
+
+	def tiles_within(self, root, direction, max_distance):
+		''' Find and return all tiles within a distance of a given
+		root tile, in a certain direction (left, right, up or down).
+
+		Uses breadth-first search.
+
+		'''
+
+		directions = {'left':'right', 'right':'left', 'north':'south', 'south':'north'}
+		del directions[directions[direction]] # remove opposite direction
+
+		directed_root = getattr(root, direction)
+		if directed_root is None:
+			return [] # nothing in the direction specified
+
+		queue = [directed_root]
+		seen = []
+		result = []
+
+		while len(queue) > 0:
+			curr_tile = queue.pop(0)
+			if not curr_tile:
+				continue
+
+			if curr_tile.distance(root) <= max_distance:
+				result.append(curr_tile)
+				# add children to queue
+				# only add if parent node was valid so that search won't explore the whole map
+				for d in directions.keys():
+					child_tile = getattr(curr_tile, d)
+					if child_tile not in seen:
+						queue.append(child_tile)
+
+			seen.append(curr_tile)
+
+		return result
 
 	def _create_tiles(self, map_data):
 		''' Create a linked series of MapTile objects,
@@ -146,7 +185,7 @@ class MapTile():
 		return dx + dy
 
 	def __str__(self):
-		return self.char
+		return self.char + ' ' + self.position
 
 # ------------------------------------------------------------------------------- #
 
@@ -156,4 +195,7 @@ class GridPosition():
 
 		self.x = x
 		self.y = y
+
+	def __str_(self):
+		return '(' + self.x + ',' + self.y + ')'
 
