@@ -12,7 +12,9 @@ if __name__ == '__main__':
 
 	agent = Agent(environment, environment.agent_start, actions_file)
 # 	agent = Agent(environment, environment.agent_start, None)
-	guard = Guard(environment, environment.guard_start)
+	guard = None
+	if environment.guard_start:
+		guard = Guard(environment, environment.guard_start)
 
 	sim = SimWindow(agent, guard, environment)
 # 	sim = SimWindow(agent, guard, environment, graphics_on=False)
