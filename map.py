@@ -1,3 +1,5 @@
+import math
+
 class Map():
 	# tile representations in map files
 	TRAVERSABLE_TILE = '.'
@@ -128,6 +130,15 @@ class MapTile():
 		self.south = None
 		self.left = None
 		self.right = None
+
+	def distance(self, other):
+		''' Calculate the manhattan distance from this map
+		tile to some other map tile. '''
+
+		dx = abs(self.position.x - other.position.x)
+		dy = abs(self.position.y - other.position.y)
+
+		return dx + dy
 
 	def __str__(self):
 		return self.char

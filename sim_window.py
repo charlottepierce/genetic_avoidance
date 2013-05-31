@@ -125,15 +125,15 @@ class SimWindow(pyglet.window.Window):
 		if symbol == key.ESCAPE:
 			pyglet.app.exit()
 
-# 		if self.finished:
-# 			return
+		if self.finished:
+			return
 
-		if symbol == key.UP:
-			self.agent.move_up()
-		elif symbol == key.DOWN:
-			self.agent.move_down()
-		elif symbol == key.LEFT:
-			self.agent.move_left()
-		elif symbol == key.RIGHT:
-			self.agent.move_right()
+# 		if symbol == key.UP:
+# 			self.agent.move_up()
+# 		elif symbol == key.DOWN:
+# 			self.agent.move_down()
+# 		elif symbol == key.LEFT:
+# 			self.agent.move_left()
+# 		elif symbol == key.RIGHT:
+# 			self.agent.move_right()
 
