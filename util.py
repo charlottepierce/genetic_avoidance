@@ -1,4 +1,7 @@
+from random import choice
+
 from map import Map
+from program_tree import ProgramTree, ProgramTreeNode
 
 # action -> python code mappings
 ACTION_MAPPINGS = {
@@ -28,12 +31,6 @@ QUERY_MAPPINGS = {
 def create_move(program_tree_node):
 	''' Create the text of a `my_move` method for an agent based on an action.
 
-	This can be added as a member function for the agent using:
-
-	method_decl = create_update(actions)
-	exec(method_decl)
-	self.update = types.MethodType(my_update, self) # replace update method with my_update for this instance only
-
 	The method created returns a value to indicate how the current node in the program
 	tree should change:
 		None: go to next node (action wasn't a conditional)
@@ -42,23 +39,24 @@ def create_move(program_tree_node):
 
 	args
 	----
-		action: The action to create a move method for.
+		program_tree_node: A ProgramTreeNode object to translate into code.
 
 	return
 	------
-		Python code equivalent of the action given.
+		Python code equivalent of the action stored by the given ProgramTreeNode.
 
 	'''
 
 	method_decl = 'def my_move(self):\n'
 
-	action = program_tree_node.action
-	if not program_tree_node.conditional:
+	if program_tree_node is None:
+		method_decl += '\tpass\n'
+	elif not program_tree_node.conditional:
+		action = program_tree_node.action
 		method_decl += '\t' + ACTION_MAPPINGS[action] + '\n'
 		method_decl += '\treturn None\n'
 	else:
-		condition = action
-
+		condition = program_tree_node.action
 		method_decl += '\tif ' + QUERY_MAPPINGS[condition] + ':\n'
 		method_decl += '\t\treturn True\n'
 		method_decl += '\telse:\n'
@@ -66,14 +64,62 @@ def create_move(program_tree_node):
 
 	return method_decl
 
-def random_program_tree():
+def random_program_tree(num_nodes):
 	''' Create a random `ProgramTree`.
+
+	args
+	----
+		num_nodes: The number of nodes the tree should have.
 
 	return
 	------
 		A random program tree.
 
 	'''
+
+	actions = ACTION_MAPPINGS.keys() + QUERY_MAPPINGS.keys()
+
+	# create root of program tree
+	action = choice(actions)
+	first_node = ProgramTreeNode(None, action, conditional=action in QUERY_MAPPINGS.keys())
+	tree = ProgramTree(first_node)
+
+	# create other nodes of the program tree
+	for x in range(num_nodes - 1):
+		# create new node, link to parent
+		action = choice(actions)
+		parent = choice(tree.node_list())
+		new_node = ProgramTreeNode(parent, action, conditional=action in QUERY_MAPPINGS.keys())
+		# create link in other direction (parent -> new node)
+		# link parent to new node, store any existing child node
+		child = None
+		if parent.conditional:
+			# parent is conditional - check for child on a random fork
+			true_branch = choice([True, False])
+			if true_branch:
+				child = parent.true_branch
+				parent.true_branch = new_node
+			else:
+				child = parent.false_branch
+				parent.false_branch = new_node
+		else:
+			child = parent.next_node
+			parent.next_node = new_node
+
+		# if an existing child was found, link it to the new node
+		if child:
+			child.parent = new_node
+			if new_node.conditional:
+				# new_node is conditional - randomly select fork to link child to
+				true_branch = choice([True, False])
+				if true_branch:
+					new_node.true_branch = child
+				else:
+					new_node.false_branch = child
+			else:
+				new_node.next_node = child
+
+	return tree
 
 def create_map(file_name):
 	''' Create a Map object using the map stored in a given file.

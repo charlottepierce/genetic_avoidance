@@ -3,7 +3,6 @@ import pyglet
 import util
 from sim_window import SimWindow
 from agent import Agent, Guard
-from program_tree import ProgramTree, ProgramTreeNode
 
 if __name__ == '__main__':
 	map_file = 'maps/1.txt'
@@ -11,14 +10,7 @@ if __name__ == '__main__':
 
 	environment = util.create_map(map_file)
 
-	conditional = ProgramTreeNode(None, 'goal_south', conditional=True)
-	conditional.true_branch = ProgramTreeNode(conditional, 'south')
-	conditional.false_branch = ProgramTreeNode(conditional, 'north')
-	conditional.true_branch.next_node = ProgramTreeNode(conditional.true_branch, 'east')
-
-	program_tree = ProgramTree(conditional)
-
-	agent = Agent(environment, environment.agent_start, program_tree)
+	agent = Agent(environment, environment.agent_start, util.random_program_tree(3))
 # 	agent = Agent(environment, environment.agent_start, None)
 	guard = None
 	if environment.guard_start:

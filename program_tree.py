@@ -45,8 +45,8 @@ class ProgramTreeNode():
 		self.conditional = conditional
 
 		if conditional:
-			self.true_branch = None
-			self.false_branch = None
+			self.true_branch = ProgramTreeNode(self, 'wait')
+			self.false_branch = ProgramTreeNode(self, 'wait')
 		else:
 			self.next_node = None
 
