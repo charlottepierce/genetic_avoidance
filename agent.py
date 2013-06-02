@@ -41,7 +41,7 @@ class Agent():
 	def my_move(self):
 		pass
 
-	def move_up(self):
+	def move_north(self):
 		''' Tell agent to move up one tile. '''
 
 		if self.tile.north and self.tile.north.traversable:
@@ -49,7 +49,7 @@ class Agent():
 			self.tile = self.tile.north
 			self.tile.has_agent = True
 
-	def move_down(self):
+	def move_south(self):
 		''' Tell agent to move down one tile. '''
 
 		if self.tile.south and self.tile.south.traversable:
@@ -57,7 +57,7 @@ class Agent():
 			self.tile = self.tile.south
 			self.tile.has_agent = True
 
-	def move_left(self):
+	def move_west(self):
 		''' Tell agent to move left one tile. '''
 
 		if self.tile.left and self.tile.left.traversable:
@@ -65,7 +65,7 @@ class Agent():
 			self.tile = self.tile.left
 			self.tile.has_agent = True
 
-	def move_right(self):
+	def move_east(self):
 		''' Tell agent to move right one tile. '''
 
 		if self.tile.right and self.tile.right.traversable:
@@ -73,7 +73,7 @@ class Agent():
 			self.tile = self.tile.right
 			self.tile.has_agent = True
 
-	def obstacle_up(self):
+	def obstacle_north(self):
 		''' Check if an obstacle is located immediately up. '''
 
 		if not self.tile.north:
@@ -81,7 +81,7 @@ class Agent():
 
 		return not self.tile.north.traversable
 
-	def obstacle_down(self):
+	def obstacle_south(self):
 		''' Check if an obstacle is located immediately down. '''
 
 		if not self.tile.south:
@@ -89,7 +89,7 @@ class Agent():
 
 		return not self.tile.south.traversable
 
-	def obstacle_left(self):
+	def obstacle_west(self):
 		''' Check if an obstacle is located immediately to the left. '''
 
 		if not self.tile.left:
@@ -97,7 +97,7 @@ class Agent():
 
 		return not self.tile.left.traversable
 
-	def obstacle_right(self):
+	def obstacle_east(self):
 		''' Check if an obstacle is located immediately to the right. '''
 
 		if not self.tile.right:
@@ -105,7 +105,7 @@ class Agent():
 
 		return not self.tile.right.traversable
 
-	def see_guard_left(self):
+	def see_guard_west(self):
 		''' Check if the agent can see the guard to the left within its view range. '''
 
 		tiles = self.game_map.tiles_within(self.tile, 'left', Agent.VIEW_RANGE)
@@ -116,7 +116,7 @@ class Agent():
 
 		return False
 
-	def see_guard_right(self):
+	def see_guard_east(self):
 		''' Check if the agent can see the guard to the right within its view range. '''
 
 		tiles = self.game_map.tiles_within(self.tile, 'right', Agent.VIEW_RANGE)
@@ -149,12 +149,12 @@ class Agent():
 
 		return False
 
-	def goal_left(self):
+	def goal_west(self):
 		''' Check if the goal is somewhere to the left of the agent. '''
 
 		return self.tile.position.x > self.game_map.goal.position.x
 
-	def goal_right(self):
+	def goal_east(self):
 		''' Check if the goal is somewhere to the right of the agent. '''
 
 		return self.tile.position.x < self.game_map.goal.position.x
@@ -195,3 +195,4 @@ class Guard(Agent):
 			self.tile.left.detection = True
 		if self.tile.right:
 			self.tile.right.detection = True
+

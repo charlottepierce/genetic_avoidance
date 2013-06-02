@@ -2,25 +2,25 @@ from map import Map
 
 # action -> python code mappings
 ACTION_MAPPINGS = {
-	'up': 'self.move_up()',
-	'down': 'self.move_down()',
-	'left': 'self.move_left()',
-	'right': 'self.move_right()',
+	'north': 'self.move_north()',
+	'south': 'self.move_south()',
+	'west': 'self.move_west()',
+	'east': 'self.move_east()',
 	'wait': 'pass'
 }
 
 # query -> python code mappings
 QUERY_MAPPINGS = {
-	'up_blocked': 'self.obstacle_up()',
-	'down_blocked': 'self.obstacle_down()',
-	'left_blocked': 'self.obstacle_left()',
-	'right_blocked': 'self.obstacle_right()',
-	'guard_left': 'self.see_guard_left()',
-	'guard_right': 'self.see_guard_right()',
+	'north_blocked': 'self.obstacle_north()',
+	'south_blocked': 'self.obstacle_south()',
+	'west_blocked': 'self.obstacle_west()',
+	'east_blocked': 'self.obstacle_east()',
+	'guard_west': 'self.see_guard_west()',
+	'guard_east': 'self.see_guard_east()',
 	'guard_north': 'self.see_guard_north()',
 	'guard_south': 'self.see_guard_south()',
-	'goal_left': 'self.goal_left()',
-	'goal_right': 'self.goal_right()',
+	'goal_west': 'self.goal_west()',
+	'goal_east': 'self.goal_east()',
 	'goal_north': 'self.goal_north()',
 	'goal_south': 'self.goal_south()'
 }
@@ -46,7 +46,7 @@ def create_action_list(file_name):
 	return filter(None, action_str.split(';'))
 
 def create_move(action):
-	''' Create the text of a `my_move` method for an agent based on a set of actions.
+	''' Create the text of a `my_move` method for an agent based on an action.
 
 	This can be added as a member function for the agent using:
 
