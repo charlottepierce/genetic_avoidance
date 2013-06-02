@@ -4,39 +4,54 @@ import util
 class Agent():
 	VIEW_RANGE = 3
 
-	def __init__(self, game_map, start_tile, actions_file):
+	def __init__(self, game_map, start_tile, program_tree):
 		''' Create a new agent object.
 
 		args
 		----
 			game_map: A tile map representing the game environment.
 			start_tile: The starting tile for the agent.
-			actions_file: The file containing the sequence of actions the agent should follow.
+			program_tree: The tree of actions defining the behaviour of the agent.
 
 		'''
 
 		self.game_map = game_map
 		self.tile = start_tile
-		self.actions = None
-
-		if actions_file:
-			self.actions = util.create_action_list(actions_file)
-			self.action_index = 0
+		self.program_tree = program_tree
 
 	def update(self):
 		# create and execute move method for next action
 
-		if not self.actions:
+		if not self.program_tree:
 			return
 
-		method_decl = util.create_move(self.actions[self.action_index])
+		# while the current node is conditional, evaluate the condition and update the
+		# current location in the program tree accordingly (makes nested conditionals possible)
+		while self.program_tree.curr_node.conditional:
+			result = self._gen_and_exec()
+
+			if result:
+				self.program_tree.curr_node = self.program_tree.curr_node.true_branch
+			else:
+				self.program_tree.curr_node = self.program_tree.curr_node.false_branch
+
+		# execute action
+		self._gen_and_exec()
+
+		# update current node of program tree
+		self.program_tree.curr_node = self.program_tree.curr_node.next_node
+		# if at end of program tree, go back to the start
+		if self.program_tree.curr_node is None:
+			self.program_tree.curr_node = self.program_tree.start_node
+
+	def _gen_and_exec(self):
+		''' Generate a `my_move` method given the current state of the program tree.
+		Execute the method and return its result. '''
+
+		method_decl = util.create_move(self.program_tree.curr_node)
 		exec(method_decl)
 		self.my_move = types.MethodType(my_move, self)
-		self.my_move()
-		# get ready for next move
-		self.action_index += 1
-		if self.action_index >= len(self.actions):
-			self.action_index = 0
+		return self.my_move()
 
 	def my_move(self):
 		pass

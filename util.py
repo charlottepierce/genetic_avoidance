@@ -45,7 +45,7 @@ def create_action_list(file_name):
 
 	return filter(None, action_str.split(';'))
 
-def create_move(action):
+def create_move(program_tree_node):
 	''' Create the text of a `my_move` method for an agent based on an action.
 
 	This can be added as a member function for the agent using:
@@ -53,6 +53,12 @@ def create_move(action):
 	method_decl = create_update(actions)
 	exec(method_decl)
 	self.update = types.MethodType(my_update, self) # replace update method with my_update for this instance only
+
+	The method created returns a value to indicate how the current node in the program
+	tree should change:
+		None: go to next node (action wasn't a conditional)
+		True: action was a conditional; go to 'true' branch.
+		False: action was a conditional; go to 'false' branch.
 
 	args
 	----
@@ -64,22 +70,19 @@ def create_move(action):
 
 	'''
 
-	method_decl = 'def my_move(self):\n\t'
+	method_decl = 'def my_move(self):\n'
 
-	if action in ACTION_MAPPINGS.keys():
-		method_decl += ACTION_MAPPINGS[action]
-	elif action.startswith('if'):
-		true_branch, false_action = [x.strip() for x in action.split(',')]
-		if_start, condition, true_action = [x.strip() for x in true_branch.split()]
-
-		method_decl += 'if ' + QUERY_MAPPINGS[condition] + ':\n'
-		method_decl += '\t\t' + ACTION_MAPPINGS[true_action] + '\n'
-		method_decl += '\telse:\n'
-		method_decl += '\t\t' + ACTION_MAPPINGS[false_action]
+	action = program_tree_node.action
+	if not program_tree_node.conditional:
+		method_decl += '\t' + ACTION_MAPPINGS[action] + '\n'
+		method_decl += '\treturn None\n'
 	else:
-		method_decl += ACTION_MAPPINGS['wait']
+		condition = action
 
-# 	print method_decl
+		method_decl += '\tif ' + QUERY_MAPPINGS[condition] + ':\n'
+		method_decl += '\t\treturn True\n'
+		method_decl += '\telse:\n'
+		method_decl += '\t\treturn False\n'
 
 	return method_decl
 
