@@ -25,26 +25,6 @@ QUERY_MAPPINGS = {
 	'goal_south': 'self.goal_south()'
 }
 
-def create_action_list(file_name):
-	''' Create a list of agent actions from the text contained in a file.
-
-	args
-	----
-		file_name: The name of the file containing agent actions to read.
-
-	return
-	------
-		List of agent actions.
-
-	'''
-
-	action_str = ""
-	with open(file_name) as f:
-		for line in f:
-			action_str += line.strip()
-
-	return filter(None, action_str.split(';'))
-
 def create_move(program_tree_node):
 	''' Create the text of a `my_move` method for an agent based on an action.
 
