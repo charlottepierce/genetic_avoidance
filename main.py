@@ -11,10 +11,11 @@ if __name__ == '__main__':
 
 	environment = util.create_map(map_file)
 
-	conditional = ProgramTreeNode('goal_south', conditional=True)
-	conditional.true_branch = ProgramTreeNode('south')
-	conditional.false_branch = ProgramTreeNode('north')
-	conditional.true_branch.next_node = ProgramTreeNode('east')
+	conditional = ProgramTreeNode(None, 'goal_south', conditional=True)
+	conditional.true_branch = ProgramTreeNode(conditional, 'south')
+	conditional.false_branch = ProgramTreeNode(conditional, 'north')
+	conditional.true_branch.next_node = ProgramTreeNode(conditional.true_branch, 'east')
+
 	program_tree = ProgramTree(conditional)
 
 	agent = Agent(environment, environment.agent_start, program_tree)

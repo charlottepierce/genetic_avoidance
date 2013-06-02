@@ -66,6 +66,15 @@ def create_move(program_tree_node):
 
 	return method_decl
 
+def random_program_tree():
+	''' Create a random `ProgramTree`.
+
+	return
+	------
+		A random program tree.
+
+	'''
+
 def create_map(file_name):
 	''' Create a Map object using the map stored in a given file.
 
