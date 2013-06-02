@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randint
 
 from map import Map
 from program_tree import ProgramTree, ProgramTreeNode
@@ -87,7 +87,11 @@ def random_program_tree(num_nodes):
 	# create other nodes of the program tree
 	for x in range(num_nodes - 1):
 		# create new node, link to parent
-		action = choice(actions)
+		rand_num = randint(1, 10)
+		if rand_num <= 9:
+			action = choice(ACTION_MAPPINGS.keys())
+		else:
+			action = choice(QUERY_MAPPINGS.keys())
 		parent = choice(tree.node_list())
 		new_node = ProgramTreeNode(parent, action, conditional=action in QUERY_MAPPINGS.keys())
 		# create link in other direction (parent -> new node)

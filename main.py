@@ -10,7 +10,10 @@ if __name__ == '__main__':
 
 	environment = util.create_map(map_file)
 
-	agent = Agent(environment, environment.agent_start, util.random_program_tree(3))
+	random_tree = util.random_program_tree(10)
+	print random_tree
+
+	agent = Agent(environment, environment.agent_start, random_tree)
 # 	agent = Agent(environment, environment.agent_start, None)
 	guard = None
 	if environment.guard_start:

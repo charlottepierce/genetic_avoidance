@@ -38,6 +38,25 @@ class ProgramTree():
 
 		return choice(self.node_list())
 
+	def __str__(self):
+		result = ''
+
+		if self.start_node is None:
+			return result
+
+		curr = self.start_node
+		if curr.conditional:
+			result += 'if ' + str(curr) + ' [\n'
+			result += str(ProgramTree(curr.true_branch))
+			result += '] else [\n'
+			result += str(ProgramTree(curr.false_branch))
+			result += ']\n'
+		else:
+			result += str(curr) + '\n'
+			result += str(ProgramTree(curr.next_node))
+
+		return result
+
 class ProgramTreeNode():
 	def __init__(self, parent_node, action, conditional=False):
 		self.parent = parent_node
