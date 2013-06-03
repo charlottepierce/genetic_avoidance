@@ -52,7 +52,7 @@ class ProgramTree():
 			result += str(ProgramTree(curr.false_branch))
 			result += ']\n'
 		else:
-			result += str(curr) + '\n'
+			result += curr.action + '\n'
 			result += str(ProgramTree(curr.next_node))
 
 		return result
