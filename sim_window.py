@@ -64,16 +64,16 @@ class SimWindow(pyglet.window.Window):
 		if self.check_win():
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
-			print 'Reached goal!'
+# 			print 'Reached goal!'
 		elif self.check_detection():
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
-			print 'Got caught...'
+# 			print 'Got caught...'
 
 		# check if the maximum number of game loops have been executed
 		self.step += 1
 		if (self.max_steps > 0) and (self.step == self.max_steps):
-			print 'Reached step limit.'
+# 			print 'Reached step limit.'
 			self.finished = True
 
 		if self.finished:
