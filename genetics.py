@@ -1,14 +1,15 @@
 import pyglet
 
-from random import randint, random
+from random import randint, random, choice
 import os
 
 import util
 from agent import Agent, Guard
 from sim_window import SimWindow
+from program_tree import ProgramTree
 
 class Experiment():
-	def __init__(self, map_file, population_size, max_steps, iterations=5, reproduction_prob=0.495, crossover_prob=0.495, mutation_prob=0.01):
+	def __init__(self, map_file, population_size, max_steps, iterations=5, reproduction_prob=0.14, crossover_prob=0.85, mutation_prob=0.01):
 		''' Set up a new experiement.
 
 		args
@@ -48,7 +49,7 @@ class Experiment():
 			best = min(results, key=lambda p: p[1])
 			print 'Closest distance:', best[1]
 			# apply genetics
-			self._apply_genetic_operation()
+			self._generate_new_population(results)
 
 	def _run_iteration(self, iteration):
 		''' Run a single iteration, logging the results.
@@ -75,7 +76,7 @@ class Experiment():
 			pyglet.app.run()
 			distance_from_goal = agent.tile.distance(self.environment.goal)
 			logger.log_performance(agent, distance_from_goal)
-			distances.append((agent, distance_from_goal))
+			distances.append([agent, distance_from_goal])
 
 			agent.reset()
 
@@ -83,17 +84,126 @@ class Experiment():
 
 		return distances
 
-	def _apply_genetic_operation(self):
+	def _generate_new_population(self, iteration_results):
 		''' Choose reproduction, crossover or mutation randomly (according to their weight)
-		and apply chosen genetic operation to the population. '''
+		and apply chosen genetic operation to the population.
+
+		reproduction:
+			Choose a single agent randomly (by fitness).
+			Directly copy the agent into the new population.
+		mutation:
+			Choose a single agent randomly (by fitness).
+			Choose a random node on the agent's program tree.
+			Delete this node and everything below.
+			Randomly generate a new subtree.
+		crossover:
+			Choose two parents randomly (by fitness).
+			Choose a crossover point in the program tree of each agent.
+			Replace the second agent's subtree (from the crossover point)
+				with a copy of the subtree (from the crossover point) from
+				the first agent.
+
+		args
+		----
+			iteration_results: Results from the last iteration, as a list of [agent, distance_from_goal] pairs.
+
+		'''
 
 		new_population = []
 
+		# change distances to fitness values (fitness = max_steps - distance) - lower distances = higher fitness
+		fitness_values = [[agent, (self.max_steps - distance_from_goal)] for agent, distance_from_goal in iteration_results]
+
+		# apply genetic operations until a new population has been created
 		while len(new_population) < self.population_size:
 			genetic_operation = self._random_genetic_operation()
-			print 'operation:', genetic_operation
+			if genetic_operation is 'reproduction':
+				self._reproduction(fitness_values, new_population)
+			elif genetic_operation is 'crossover':
+				self._crossover(fitness_values, new_population)
+			elif genetic_operation is 'mutation':
+				self._mutation(fitness_values, new_population)
 
 		self.population = new_population
+
+	def _reproduction(self, fitness_values, new_population):
+		''' Perform a reproduction operation. '''
+
+		selected_agent = self._random_agent_by_fitness(fitness_values)
+		new_population.append(selected_agent.copy())
+
+	def _mutation(self, fitness_values, new_population):
+		''' Perform a mutation operation. '''
+
+		to_mutate = self._random_agent_by_fitness(fitness_values)
+		# randomly generate new subtree of random size in the range [5, 10]
+		random_subtree = util.random_program_tree(randint(5, 10)).start_node
+		# copy program tree, select random node and attach generated subtree in its place
+		new_tree = to_mutate.program_tree.copy()
+		attach_point = new_tree.random_node().parent
+
+		while attach_point is None:
+			attach_point = new_tree.random_node().parent
+
+		random_subtree.parent = attach_point
+		if attach_point.conditional:
+			true_branch = choice([True, False])
+			if true_branch:
+				attach_point.true_branch = random_subtree
+			else:
+				attach_point.false_branch = random_subtree
+		else:
+			attach_point.next_node = random_subtree
+
+		new_population.append(Agent(to_mutate.game_map, to_mutate.game_map.agent_start, new_tree))
+
+	def _crossover(self, fitness_values, new_population):
+		''' Perform a crossover operation. '''
+
+		crossover_agent = self._random_agent_by_fitness(fitness_values)
+		new_tree = crossover_agent.program_tree.copy()
+		replacement_subtree = self._random_agent_by_fitness(fitness_values).program_tree.copy()
+
+		# find crossover point in the first tree, and replacement subtree from a second parent
+		crossover_point = new_tree.random_node()
+		new_subtree = ProgramTree(self._random_agent_by_fitness(fitness_values).program_tree.random_node()).copy().start_node
+
+		# link replacement subtree at crossover point
+		new_subtree.parent = crossover_point
+		if crossover_point.conditional:
+			true_branch = choice([True, False])
+			if true_branch:
+				crossover_point.true_branch = new_subtree
+			else:
+				crossover_point.false_branch = new_subtree
+		else:
+			crossover_point.next_node = new_subtree
+
+		new_population.append(Agent(crossover_agent.game_map, crossover_agent.game_map.agent_start, new_tree))
+
+	def _random_agent_by_fitness(self, agent_list):
+		''' Select an agent randomly, where agents with higher fitness values are more likely to be picked.
+
+		args
+		----
+			agent_list: A list of [agent, fitness] pairs.
+
+		return
+		------
+			A random agent.
+
+		'''
+
+		fitness_sum = sum([x[1] for x in agent_list])
+		# calculate probability of being chosen for each agent
+		probabilities = [[agent, (float(fitness) / float(fitness_sum))] for agent, fitness in agent_list]
+
+		random_num = random()
+		weight_total = 0
+		for agent, probability in probabilities:
+			weight_total += probability
+			if weight_total > random_num:
+				return agent
 
 	def _random_genetic_operation(self):
 		''' Choose one of 'reproduction', 'crossover' or 'mutation' randomly according to their weighting. '''

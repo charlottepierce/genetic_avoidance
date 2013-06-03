@@ -19,6 +19,11 @@ class Agent():
 		self.tile = start_tile
 		self.program_tree = program_tree
 
+	def copy(self):
+		''' Create a copy of the agent. '''
+
+		return Agent(self.game_map, self.game_map.agent_start, self.program_tree.copy())
+
 	def reset(self):
 		''' Reset the agent to its starting position and the top of the program tree. '''
 
