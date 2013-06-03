@@ -196,6 +196,6 @@ class GridPosition():
 		self.x = x
 		self.y = y
 
-	def __str_(self):
-		return '(' + self.x + ',' + self.y + ')'
+	def __str__(self):
+		return '(' + str(self.x) + ',' + str(self.y) + ')'
 

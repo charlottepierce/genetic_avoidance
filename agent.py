@@ -19,6 +19,12 @@ class Agent():
 		self.tile = start_tile
 		self.program_tree = program_tree
 
+	def reset(self):
+		''' Reset the agent to its starting position and the top of the program tree. '''
+
+		self.tile = self.game_map.agent_start
+		self.program_tree.curr_node = self.program_tree.start_node
+
 	def update(self):
 		# create and execute move method for next action
 

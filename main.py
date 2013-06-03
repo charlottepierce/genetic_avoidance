@@ -1,25 +1,8 @@
-import pyglet
-
-import util
-from sim_window import SimWindow
-from agent import Agent, Guard
+from genetics import Experiment
 
 if __name__ == '__main__':
 	map_file = 'maps/1.txt'
-	actions_file = 'actions/1.txt'
 
-	environment = util.create_map(map_file)
-
-	random_tree = util.random_program_tree(10)
-	print random_tree
-
-	agent = Agent(environment, environment.agent_start, random_tree)
-# 	agent = Agent(environment, environment.agent_start, None)
-	guard = None
-	if environment.guard_start:
-		guard = Guard(environment, environment.guard_start)
-
-	sim = SimWindow(agent, guard, environment)
-# 	sim = SimWindow(agent, guard, environment, graphics_on=False)
-	pyglet.app.run()
+	experiment = Experiment(map_file, 2, 50, iterations=5)
+	experiment.run()
 

@@ -10,13 +10,16 @@ class SimWindow(pyglet.window.Window):
 	GUARD_COL = (100, 100, 100, 255)
 	DETECTION_ZONE_COL = (255, 0, 0, 200)
 
-	def __init__(self, agent, guard, environment, graphics_on=True):
+	def __init__(self, agent, guard, environment, max_steps=0, graphics_on=True):
 		''' Create a simulation window.
 
 		args
 		----
 			agent: The agent in the environment.
 			environment: A tuple of tuples, where each inner tuple is a row of the map.
+			max_steps: Maximum number of game loops to execute before finishing the simulation.
+				If set to 0, number of steps is unlimited.
+			graphics_on: True if graphics should be displayed.
 
 		'''
 
@@ -29,6 +32,8 @@ class SimWindow(pyglet.window.Window):
 
 		pyglet.clock.schedule(self.update)
 
+		self.max_steps = max_steps
+		self.step = 0
 		self.environment = environment
 		self.agent = agent
 		self.guard = guard
@@ -64,6 +69,15 @@ class SimWindow(pyglet.window.Window):
 			self.on_draw() # need to force a last draw because of execution order
 			self.finished = True
 			print 'Got caught...'
+
+		# check if the maximum number of game loops have been executed
+		self.step += 1
+		if (self.max_steps > 0) and (self.step == self.max_steps):
+			print 'Reached step limit.'
+			self.finished = True
+
+		if self.finished:
+			pyglet.app.exit()
 
 	def on_draw(self):
 		''' Create an image for each tile and draw it. '''
