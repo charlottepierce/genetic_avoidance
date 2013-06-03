@@ -52,8 +52,11 @@ class Experiment():
 			best = min(results, key=lambda p: p[1])
 			print 'Closest distance:', best[1]
 			self._pickle_best(best[0], iteration + 1)
+			print 'Best program tree saved.'
 			# apply genetics
-			self._generate_new_population(results)
+			if iteration < (self.iterations - 1):
+				self._generate_new_population(results)
+				print 'New population generated.'
 
 	def _pickle_best(self, agent, iteration):
 		''' Save the program tree of an agent instance to file.
@@ -92,7 +95,10 @@ class Experiment():
 		logger = Logger(self.log_folder, iteration + 1, len(self.population))
 
 		distances = [] # list of (agent, distance_from_goal) pairs
+		agent_num = 0
 		for agent in self.population:
+			agent_num += 1
+			print 'Running agent', str(agent_num)
 			sim = SimWindow(agent, self.guard, self.environment, self.max_steps, graphics_on=False)
 			pyglet.app.run()
 			distance_from_goal = agent.tile.distance(self.environment.goal)
