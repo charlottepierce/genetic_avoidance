@@ -2,6 +2,7 @@ import pyglet
 
 from random import randint, random, choice
 import os
+import pickle
 
 import util
 from agent import Agent, Guard
@@ -9,11 +10,12 @@ from sim_window import SimWindow
 from program_tree import ProgramTree
 
 class Experiment():
-	def __init__(self, map_file, population_size, max_steps, iterations=5, reproduction_prob=0.14, crossover_prob=0.85, mutation_prob=0.01):
+	def __init__(self, log_folder, map_file, population_size, max_steps, iterations=5, reproduction_prob=0.14, crossover_prob=0.85, mutation_prob=0.01):
 		''' Set up a new experiement.
 
 		args
 		----
+			log_folder: The folder in which to store logs of the experiment.
 			map_file: The file containing the map definition to use.
 			population_size: The initial population size to use.
 			max_steps: The maximum number of game loops an agent will get to reach the goal.
@@ -27,6 +29,7 @@ class Experiment():
 			print '!!! Bad genetic operation probabilities. Check parameters. !!!'
 			return
 
+		self.log_folder = log_folder
 		self.environment = util.create_map(map_file)
 		self.population_size = population_size
 		self.max_steps = max_steps
@@ -48,8 +51,26 @@ class Experiment():
 			results = self._run_iteration(iteration)
 			best = min(results, key=lambda p: p[1])
 			print 'Closest distance:', best[1]
+			self._pickle_best(best[0], iteration)
 			# apply genetics
 			self._generate_new_population(results)
+
+	def _pickle_best(self, agent, iteration):
+		''' Save the program tree of an agent instance to file.
+		Generally used on the best agent from an iteration.
+
+		Will save in the experiment log folder as 'best-<iteration>.pk'
+
+		args
+		----
+			agent: The agent who's program tree is to be be saved.
+			iteration: The population iteration the agent was from.
+
+		'''
+
+		file_name = self.log_folder + 'best_' + str(iteration) + '.pk'
+		with open(file_name, 'wb') as output:
+			pickle.dump(agent.program_tree, output, pickle.HIGHEST_PROTOCOL)
 
 	def _run_iteration(self, iteration):
 		''' Run a single iteration, logging the results.
@@ -68,7 +89,7 @@ class Experiment():
 		'''
 
 		print 'Iteration:', iteration + 1
-		logger = Logger(iteration + 1, len(self.population))
+		logger = Logger(self.log_folder, iteration + 1, len(self.population))
 
 		distances = [] # list of (agent, distance_from_goal) pairs
 		for agent in self.population:
@@ -243,13 +264,13 @@ class Experiment():
 		return population
 
 class Logger():
-	def __init__(self, iteration_num, population_size):
+	def __init__(self, folder, iteration_num, population_size):
 		''' Create a new logger for an iteration. '''
 
-		if not os.path.exists('logs/'):
-			os.makedirs('logs/')
+		if not os.path.exists(folder):
+			os.makedirs(folder)
 
-		self.out_file = open('logs/' + str(iteration_num) + '.log', 'w+')
+		self.out_file = open(folder + str(iteration_num) + '.log', 'w+')
 		self.out_file.write('Iteration: ' + str(iteration_num) + '\n')
 		self.out_file.write('Population Size: ' + str(population_size) + '\n\n')
 
@@ -265,9 +286,6 @@ class Logger():
 			self.out_file.write('Reached step limit.\n')
 
 		self.out_file.write('Distance From Goal: ' + str(distance_from_goal) + '\n')
-
-		self.out_file.write('Program Tree:\n')
-		self.out_file.write(str(agent.program_tree))
 		self.out_file.write('\n')
 
 	def close(self):
