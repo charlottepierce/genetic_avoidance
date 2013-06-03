@@ -51,7 +51,7 @@ class Experiment():
 			results = self._run_iteration(iteration)
 			best = min(results, key=lambda p: p[1])
 			print 'Closest distance:', best[1]
-			self._pickle_best(best[0], iteration)
+			self._pickle_best(best[0], iteration + 1)
 			# apply genetics
 			self._generate_new_population(results)
 

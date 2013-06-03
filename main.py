@@ -11,8 +11,19 @@ if __name__ == '__main__':
 # ----- Run genetic programming experiment. ----- #
 
 	map_file = 'maps/1.txt'
-
 	experiment = Experiment('map1log/', map_file, 100, 50, iterations=100)
+	experiment.run()
+
+	map_file = 'maps/2.txt'
+	experiment = Experiment('map2log/', map_file, 100, 50, iterations=100)
+	experiment.run()
+
+	map_file = 'maps/3.txt'
+	experiment = Experiment('map3log/', map_file, 100, 50, iterations=100)
+	experiment.run()
+
+	map_file = 'maps/4.txt'
+	experiment = Experiment('map4log/', map_file, 100, 50, iterations=100)
 	experiment.run()
 
 # ----- Load and run a map with a pickled program tree. ----- #
