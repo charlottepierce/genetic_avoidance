@@ -57,6 +57,44 @@ class ProgramTree():
 
 		return result
 
+	def copy(self):
+		''' Create a copy of the program tree.
+
+		Uses breadth-first search.
+
+		return
+		------
+			A copy of the program tree.
+
+		'''
+
+		# copy start node
+		result = ProgramTree(None)
+		# queue is formed of (parent_copy, parent_field, child) pairs - initialise with children of the new starting node
+		queue = [(None, None, self.start_node)]
+
+		while len(queue) > 0:
+			new_parent, parent_field, to_copy = queue.pop(0)
+			# create new node, link to parent
+			new_node = ProgramTreeNode(new_parent, to_copy.action, conditional=to_copy.conditional)
+			# link parent -> child via the specified field - set as root node of copy if parent is none
+			if new_parent is None:
+				result.start_node = new_node
+				result.curr_node = new_node
+			else:
+				setattr(new_parent, parent_field, new_node)
+			# add children to queue
+			if to_copy.conditional:
+				if to_copy.true_branch:
+					queue.append((new_node, 'true_branch', to_copy.true_branch))
+				if to_copy.false_branch:
+					queue.append((new_node, 'false_branch', to_copy.false_branch))
+			else:
+				if to_copy.next_node:
+					queue.append((new_node, 'next_node', to_copy.next_node))
+
+		return result
+
 class ProgramTreeNode():
 	def __init__(self, parent_node, action, conditional=False):
 		self.parent = parent_node
