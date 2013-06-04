@@ -49,16 +49,19 @@ class Experiment():
 		for iteration in range(self.iterations):
 			# calculate
 			results = self._run_iteration(iteration)
-			best = min(results, key=lambda p: p[1])
-			print 'Closest distance:', best[1]
-			self._pickle_best(best[0], iteration + 1)
+			best = min(results, key=lambda p: p[1])[1]
+			print 'Closest distance:', best
+			# save all best-performing agent trees
+			best_agents = [result[0] for result in results if result[1] == best]
+			for i in range(len(best_agents)):
+				self._pickle_best(best_agents[i], i, iteration + 1)
 			print 'Best program tree saved.'
 			# apply genetics
 			if iteration < (self.iterations - 1):
 				self._generate_new_population(results)
 				print 'New population generated.'
 
-	def _pickle_best(self, agent, iteration):
+	def _pickle_best(self, agent, num, iteration):
 		''' Save the program tree of an agent instance to file.
 		Generally used on the best agent from an iteration.
 
@@ -67,11 +70,12 @@ class Experiment():
 		args
 		----
 			agent: The agent who's program tree is to be be saved.
+			num: The agent number (i.e., if there are more than one 'best' agent).
 			iteration: The population iteration the agent was from.
 
 		'''
 
-		file_name = self.log_folder + 'best_' + str(iteration) + '.pk'
+		file_name = self.log_folder + 'best_' + str(iteration) + '-' + str(num) + '.pk'
 		with open(file_name, 'wb') as output:
 			pickle.dump(agent.program_tree, output, pickle.HIGHEST_PROTOCOL)
 

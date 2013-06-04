@@ -59,6 +59,8 @@ class SimWindow(pyglet.window.Window):
 		if self.finished:
 			return
 
+		print '   step ' + str(self.step)
+
 		self.agent.update()
 
 		if self.check_win():

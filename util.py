@@ -88,7 +88,7 @@ def random_program_tree(num_nodes):
 	for x in range(num_nodes - 1):
 		# create new node, link to parent
 		rand_num = randint(1, 10)
-		if rand_num <= 9:
+		if rand_num <= 5:
 			action = choice(ACTION_MAPPINGS.keys())
 		else:
 			action = choice(QUERY_MAPPINGS.keys())
