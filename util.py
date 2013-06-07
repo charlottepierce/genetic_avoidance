@@ -125,6 +125,55 @@ def random_program_tree(num_nodes):
 
 	return tree
 
+def random_guard_movement(num_nodes):
+	''' Create a random movement pattern for a guard.
+	The movement pattern created will not include any conditionals.
+
+	args
+	----
+		num_nodes: The number of nodes to create in the program tree.
+
+	return
+	------
+		A program tree representing the random movement pattern.
+		The number of nodes in the tree returned will be (num_nodes * 2), as the
+		movement pattern generated is reversed so the guard will move back and forth between two positions.
+
+	'''
+
+	opposites = {'north':'south', 'south':'north', 'west':'east', 'east':'west', 'wait':'wait'}
+
+	reversal = []
+
+	actions = ACTION_MAPPINGS.keys()
+	# create root of program tree
+	action = choice(actions)
+	first_node = ProgramTreeNode(None, action)
+	tree = ProgramTree(first_node)
+
+	parent = first_node
+	reversal.append(opposites[action])
+
+	# create other nodes of the program tree
+	for x in range(num_nodes - 1):
+		# create new node, link to parent
+		action = choice(actions)
+		new_node = ProgramTreeNode(parent, action)
+		parent.next_node = new_node
+
+		parent = new_node
+		reversal.append(opposites[action])
+
+	# add in reversal nodes
+	while len(reversal) > 0:
+		action = reversal.pop()
+		new_node = ProgramTreeNode(parent, action)
+		parent.next_node = new_node
+
+		parent = new_node
+
+	return tree
+
 def create_map(file_name):
 	''' Create a Map object using the map stored in a given file.
 

@@ -198,27 +198,85 @@ class Agent():
 # ------------------------------------------------------------------------------- #
 
 class Guard(Agent):
-	def __init__(self, game_map, start_tile):
+	def __init__(self, game_map, start_tile, move=0):
 		''' Create a new guard object. '''
 
-		Agent.__init__(self, game_map, start_tile, None)
+		# create program tree if movement required
+		if move > 0:
+			program_tree = util.random_guard_movement(move)
+			Agent.__init__(self, game_map, start_tile, program_tree)
+		else:
+			Agent.__init__(self, game_map, start_tile, None)
+
+		self._mark_surrounding_tiles()
+
+	def _mark_surrounding_tiles(self, mark=True):
+		''' Mark (or unmark) surrounding tiles as detection areas. '''
+
 		# mark surrounding tiles as detection zones
 		north = self.tile.north
 		if north:
-			north.detection = True
+			north.detection = mark
 			if north.left:
-				north.left.detection = True
+				north.left.detection = mark
 			if north.right:
-				north.right.detection = True
+				north.right.detection = mark
 		south = self.tile.south
 		if south:
-			south.detection = True
+			south.detection = mark
 			if south.left:
-				south.left.detection = True
+				south.left.detection = mark
 			if south.right:
-				south.right.detection = True
+				south.right.detection = mark
 		if self.tile.left:
-			self.tile.left.detection = True
+			self.tile.left.detection = mark
 		if self.tile.right:
-			self.tile.right.detection = True
+			self.tile.right.detection = mark
 
+	def move_north(self):
+		''' Tell guard to move up one tile. '''
+
+		self._mark_surrounding_tiles(mark=False)
+
+		if self.tile.north and self.tile.north.traversable:
+			self.tile.has_guard = False
+			self.tile = self.tile.north
+			self.tile.has_guard = True
+
+		self._mark_surrounding_tiles()
+
+	def move_south(self):
+		''' Tell guard to move down one tile. '''
+
+		self._mark_surrounding_tiles(mark=False)
+
+		if self.tile.south and self.tile.south.traversable:
+			self.tile.has_guard = False
+			self.tile = self.tile.south
+			self.tile.has_guard = True
+
+		self._mark_surrounding_tiles()
+
+	def move_west(self):
+		''' Tell guard to move left one tile. '''
+
+		self._mark_surrounding_tiles(mark=False)
+
+		if self.tile.left and self.tile.left.traversable:
+			self.tile.has_guard = False
+			self.tile = self.tile.left
+			self.tile.has_guard = True
+
+		self._mark_surrounding_tiles()
+
+	def move_east(self):
+		''' Tell guard to move right one tile. '''
+
+		self._mark_surrounding_tiles(mark=False)
+
+		if self.tile.right and self.tile.right.traversable:
+			self.tile.has_guard = False
+			self.tile = self.tile.right
+			self.tile.has_guard = True
+
+		self._mark_surrounding_tiles()

@@ -3,6 +3,7 @@ import pyglet
 from random import randint, random, choice
 import os
 import pickle
+from pickle import PicklingError
 
 import util
 from agent import Agent, Guard
@@ -51,7 +52,7 @@ class Experiment():
 			results = self._run_iteration(iteration)
 			best = min(results, key=lambda p: p[1])[1]
 			print 'Closest distance:', best
-			# save all best-performing agent trees
+			# save all perfect-performing agent trees
 			best_agents = [result[0] for result in results if result[1] == best]
 			for i in range(len(best_agents)):
 				self._pickle_best(best_agents[i], i, iteration + 1)
@@ -75,9 +76,14 @@ class Experiment():
 
 		'''
 
-		file_name = self.log_folder + 'best_' + str(iteration) + '-' + str(num) + '.pk'
-		with open(file_name, 'wb') as output:
-			pickle.dump(agent.program_tree, output, pickle.HIGHEST_PROTOCOL)
+		try:
+			file_name = self.log_folder + 'best_' + str(iteration) + '-' + str(num) + '.pk'
+			with open(file_name, 'wb') as output:
+				pickle.dump(agent.program_tree, output, pickle.HIGHEST_PROTOCOL)
+		except PicklingError:
+			print 'Pickle failed.'
+			output.close()
+			return
 
 	def _run_iteration(self, iteration):
 		''' Run a single iteration, logging the results.

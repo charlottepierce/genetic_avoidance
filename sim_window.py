@@ -59,9 +59,10 @@ class SimWindow(pyglet.window.Window):
 		if self.finished:
 			return
 
-		print '   step ' + str(self.step)
+		# print '   step ' + str(self.step)
 
 		self.agent.update()
+		self.guard.update()
 
 		if self.check_win():
 			self.on_draw() # need to force a last draw because of execution order
@@ -144,12 +145,12 @@ class SimWindow(pyglet.window.Window):
 		if self.finished:
 			return
 
-# 		if symbol == key.UP:
-# 			self.agent.move_up()
-# 		elif symbol == key.DOWN:
-# 			self.agent.move_down()
-# 		elif symbol == key.LEFT:
-# 			self.agent.move_left()
-# 		elif symbol == key.RIGHT:
-# 			self.agent.move_right()
+		if symbol == key.UP:
+			self.agent.move_north()
+		elif symbol == key.DOWN:
+			self.agent.move_south()
+		elif symbol == key.LEFT:
+			self.agent.move_west()
+		elif symbol == key.RIGHT:
+			self.agent.move_east()
 
