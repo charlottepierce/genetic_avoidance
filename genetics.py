@@ -11,7 +11,7 @@ from sim_window import SimWindow
 from program_tree import ProgramTree
 
 class Experiment():
-	def __init__(self, log_folder, map_file, population_size, max_steps, iterations=5, reproduction_prob=0.14, crossover_prob=0.85, mutation_prob=0.01):
+	def __init__(self, log_folder, map_file, population_size, max_steps, guard_move=0, iterations=5, reproduction_prob=0.14, crossover_prob=0.85, mutation_prob=0.01):
 		''' Set up a new experiement.
 
 		args
@@ -21,6 +21,7 @@ class Experiment():
 			population_size: The initial population size to use.
 			max_steps: The maximum number of game loops an agent will get to reach the goal.
 				If 0, will be unlimited.
+			guard_move: Length of a guard's random walk.
 			iterations: Number of reproductive cycles to perform.
 
 		'''
@@ -42,7 +43,7 @@ class Experiment():
 		self.population = self._init_population(self.environment, self.population_size)
 		self.guard = None
 		if self.environment.guard_start:
-			self.guard = Guard(self.environment, self.environment.guard_start)
+			self.guard = Guard(self.environment, self.environment.guard_start, move=guard_move)
 
 	def run(self):
 		''' Run the experiment. '''

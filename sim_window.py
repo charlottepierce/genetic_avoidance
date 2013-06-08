@@ -62,7 +62,8 @@ class SimWindow(pyglet.window.Window):
 		# print '   step ' + str(self.step)
 
 		self.agent.update()
-		self.guard.update()
+		if self.guard:
+			self.guard.update()
 
 		if self.check_win():
 			self.on_draw() # need to force a last draw because of execution order
