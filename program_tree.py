@@ -1,5 +1,7 @@
 from random import choice
 
+import util
+
 class ProgramTree():
 	def __init__(self, first_node):
 		self.start_node = first_node
@@ -102,8 +104,8 @@ class ProgramTreeNode():
 		self.conditional = conditional
 
 		if conditional:
-			self.true_branch = ProgramTreeNode(self, 'wait')
-			self.false_branch = ProgramTreeNode(self, 'wait')
+			self.true_branch = ProgramTreeNode(self, util.random_movement_action())
+			self.false_branch = ProgramTreeNode(self, util.random_movement_action())
 		else:
 			self.next_node = None
 

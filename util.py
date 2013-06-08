@@ -8,8 +8,7 @@ ACTION_MAPPINGS = {
 	'north': 'self.move_north()',
 	'south': 'self.move_south()',
 	'west': 'self.move_west()',
-	'east': 'self.move_east()',
-	'wait': 'pass'
+	'east': 'self.move_east()'
 }
 
 # query -> python code mappings
@@ -173,6 +172,11 @@ def random_guard_movement(num_nodes):
 		parent = new_node
 
 	return tree
+
+def random_movement_action():
+	''' Return a random movement action. '''
+
+	return choice(ACTION_MAPPINGS.keys())
 
 def create_map(file_name):
 	''' Create a Map object using the map stored in a given file.

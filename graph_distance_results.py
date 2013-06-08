@@ -2,8 +2,8 @@ import os
 
 import matplotlib.pyplot as plt
 
-logs = 'no_guard_movement/pickled/map5log/'
-num_log_files = 100
+logs = 'map1log/'
+num_log_files = 10
 
 distances = []
 log_file_num = 0
@@ -15,8 +15,6 @@ while log_file_num < num_log_files:
 
 	if not os.path.exists(file_name):
 		continue
-
-	print 'Log:', file_name
 
 	with open(file_name) as f:
 		iteration_distances = []
