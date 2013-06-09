@@ -54,10 +54,10 @@ class Experiment():
 			best = min(results, key=lambda p: p[1])[1]
 			print 'Closest distance:', best
 			# save all perfect-performing agent trees
-# 			best_agents = [result[0] for result in results if result[1] == best]
-# 			for i in range(len(best_agents)):
-# 				self._pickle_best(best_agents[i], i, iteration + 1)
-# 			print 'Best program tree saved.'
+			best_agents = [result[0] for result in results if result[1] == best]
+			for i in range(len(best_agents)):
+				self._pickle_best(best_agents[i], i, iteration + 1)
+			print 'Best program tree saved.'
 			# apply genetics
 			if iteration < (self.iterations - 1):
 				self._generate_new_population(results)
