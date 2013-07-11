@@ -11,13 +11,13 @@ if __name__ == '__main__':
 # ----- Run genetic programming experiment. ----- #
 
 # 	map_file = 'maps/5.txt'
-# 	experiment = Experiment('map1log/', map_file, 100, 25, guard_move=20, iterations=100)
+# 	experiment = Experiment('map5log/', map_file, 100, 25, guard_move=20, iterations=100)
 # 	experiment.run()
 
 # ----- Load and run a map with a pickled program tree. ----- #
 
-# 	map_file = 'maps/5.txt'
-# 	pickle_file = 'map5log/best_1-1.pk'
+# 	map_file = 'maps/1.txt'
+# 	pickle_file = 'map5log/best_93-0.pk'
 # 	with open(pickle_file, 'rb') as in_file:
 # 		program_tree = pickle.load(in_file)
 #
